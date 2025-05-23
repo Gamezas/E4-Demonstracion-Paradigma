@@ -1,0 +1,16 @@
+> (experimentar "Na" "Cl")
+Na + Cl = NaCl Reacción Encontrada!
+> (experimentar "Cl" "Cl")
+Cl + Cl No se encontró reacción
+> (experimentar "C" "Cl")
+C + Cl No se encontró reacción
+> (experimentar "" "")
+Elemento no encontrado
+> (experimentar "" "Cl")
+Elemento no encontrado
+> (experimentar "O" "Cl")
+O + Cl No se encontró reacción
+> (experimentar "Fe" "Cl")
+Fe + Cl = FeCl Reacción Encontrada!
+> (experimentar "O" "Cu")
+O + Cu = OCu Reacción Encontrada!
