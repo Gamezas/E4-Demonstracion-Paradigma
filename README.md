@@ -13,7 +13,7 @@ Las reacciones químicas son procesos termodinámicos de transformaciones de la 
 Con esta definicón en mente se pensó simplificarlo de la mejor manera, con el objetivo que sea sencillo de entender, por lo que en este simulador solo se pueden hacer reacciones entre elemenos Metales (M) y No Metales (NM).
 
 La lista de elementos es la siguiente:
-## 🧪 Elementos del Simulador
+## Elementos del Simulador
 
 Estos son los elementos químicos disponibles en el simulador:
 - **Fe** – Hierro (Metal)
