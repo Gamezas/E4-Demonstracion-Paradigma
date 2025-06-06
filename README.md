@@ -2,20 +2,18 @@
 ## Paradigma funcional
 ## Alejandro Adrián García Martínez
 ## Descripción
-La posibilidad de realizar experimentos con diferentes elementos y ver sus reacciones químicas es un poco complicada ya que varias reacciones pueden ser peligrosas o no se cuenta con el material o los elementos para llevar acabo, es por eso que con el objetivo dicáctico de ayudar a los alumnos a conocer un poco más sobre la química se diseño un simulador de reacciones químicas siguiendo el paradigma funcional en DrRacket.
+La posibilidad de realizar experimentos con diferentes elementos y ver sus reacciones químicas es un poco complicada ya que varias reacciones pueden ser peligrosas o no se cuenta con el material o los elementos para llevar acabo, es por eso que con el objetivo dicáctico de ayudar a los alumnos a conocer un poco más sobre la química se diseño un simulador de reacciones químicas siguiendo el paradigma funcional en Racket.
 
 ![image](https://github.com/user-attachments/assets/1cffa6f2-2840-4a09-9b40-34dad1589c43)
 
 ## Teoría y Diseño
-Para este simulador se tomó como base el conceto de las reacciones químicas entre elementos. 
+Para este simulador se tomó como base el concepto de las reacciones químicas entre elementos. 
 Las reacciones químicas son procesos termodinámicos de transformaciones de la materia. Para que suceda una se necesita de que intervengan dos o más sustancias (metales o no metales), que cambian significativamente en el proceso, y pueden consumir o liberar energía para generar dos o más sustancias llamadas productos. (Concepto, s.f.)
 
 Con esta definicón en mente se pensó simplificarlo de la mejor manera, con el objetivo que sea sencillo de entender, por lo que en este simulador solo se pueden hacer reacciones entre elemenos Metales (M) y No Metales (NM).
 
 La lista de elementos es la siguiente:
 ## Elementos del Simulador
-
-Estos son los elementos químicos disponibles en el simulador:
 - **Fe** – Hierro (Metal)
 - **C** – Carbono (No Metal)
 - **Cu** – Cobre (Metal)
@@ -106,7 +104,57 @@ Igualmente en el caso promedio será ```O(n)``` suponiendo que recorrió la list
 Finalmente en el mejor de los casos será ```O(1)```  suponiendo que el elemento buscado sea el primero de la lista por lo que no habrá necesidad de recorrer la lista.
 
 # Casos prueba
+Para poder utilizar el programa se debe abrir en el sistema de DrRacket y pulsar el botón de correr, una vez en consola se debe llamar la función auxiliar para empezar a experimentar. La plantilla es la siguiente:
 
-## Conclusión
-La complejidad del sistema es de O(n) principalmente por la necesidad de revisar la lista de elementos en busca del elegido, así mismo también la lógica del programa permite que también se pueda desarrollar un algoritmo un poco más robusto por medio del paradigma lógico, pero la ventaja de hacerlo en el paradigma funcional es que podemos hacer mayores mezclas sin necesidad de añadir una por una, podemos añadir nuevos elemenots al sistema en la lista.
-Así mismo se cumple el objetivo del sistema ya que de esta forma los alumnos pueden descubrir que pueden combinar de reacciones químicas sin necesidad de asistir al laboratorio.
+```
+(experimentar "Elemento" "Elemento")
+``` 
+Se debe cambiar la palabras ```Elemento``` por un símbolo válido de la lista de los elementos y colocarse entre comillas para que el sistema lo detecte de forma correcta, por ejemplo:
+
+```
+(Entrada) v
+> (experimentar "Na" "Cl")
+Na + Cl = NaCl Reacción Encontrada!
+(Salida) ^
+```
+
+Algunos pruebas realizadas son las siguientes:
+
+```
+> (experimentar "Cl" "Cl")
+Cl + Cl No se encontró reacción
+> (experimentar "C" "Cl")
+C + Cl No se encontró reacción
+> (experimentar "" "")
+Elemento no encontrado
+> (experimentar "" "Cl")
+```
+
+Se invita a revisar el archivo ```test.txt``` para ver más pruebas realizadas, así invitar al lector a realizar las suyas para conocer un poco más el sistema.
+
+# Alternativas
+Una alternativa a este sistema puede ser por medio de Prolog con el paradigma lógico. Es sencillo realizarlo de con este método ya que las mismas reacciones trabajan con una lógica que puede ser simulada en este lenguaje y se podría genera un sistema funcional muy sencillo. La complejidad puede llegar a ser similar a este sistema en Racket, diferencia crucial radica en su capacidad de escalabilidadm en Prolog las relaciones se deben de hacer de forma manual, por lo que se volvería más tedioso generar uha tabla con todos los elementos y las posbles reacciones entre ellos. Al contrario de Racket que solo basta con actualizar la lista con loe selementos deseados y sus características.
+
+Otra ocpión podría ser al realizarce con una gramática, esto se podría lograr al definir en el lenguaje solo los símbolos de los elementos y separar la regla de la gramática de uan forma similar a la siguiente:
+
+```
+NP -> M NM
+M -> 'hierro'
+NM -> 'carbono'
+```
+Así también se podría diseñar un algoritmo para las reacciones químicas y construir los arboles con ayuda de Regex. La difrenecia es que se pierde un poco el potencial de escalabilidad igualmente, así como en Prolog, aquí principalmente ya que si se busca añadir por ejemplo aleaciones hay que hacer modificaciones a la gramática y revisar que se sostenga como una LL(1) provocando más trabajo.
+
+Conidero que en comparación a las alternativas analizadas Regex se mentiene como las más sencilla y flexible de todas manteniendo una complejidad de ```O(n)``` en la gran mayoría de sus casos y ```O(1)``` en los otros pocos. Así mismo deja la posibilidad de escalar el sistema a más funciones mantendiendo su sencilles y felxibilidad en todo momento y si es posible también su complejidad.
+
+# Conclución
+Para cerrar considero que el programa guarda un gran potencial didactico no solo para la química si no también para la programación, al usar uno de los paradigmas más usados en la programación por medio de un lenguaje sencillo y básico los alumnos pueden aprender de las reacciones químicas así un poco sobre la programación y el paradigma funcional a través de este sistema.
+
+# Referncias
+
+Concepto (s.f.). Reacción química. Recuperado de: https://concepto.de/reaccion-quimica/
+
+Fisher Scientific. (s.f.) Tabla Periódica Interactiva de los Elementos. Recuperado de: https://www.fishersci.es/es/es/periodic-table.html#h1
+
+Racket (s.f.). 5.1 Defining Structure Types: struct. Recuperado de: https://docs.racket-lang.org/reference/define-struct.html
+
+Racket (s.f.) 5 Structures: https://docs.racket-lang.org/reference/structures.html
