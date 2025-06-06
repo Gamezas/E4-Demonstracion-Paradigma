@@ -2,19 +2,42 @@
 ## Paradigma funcional
 ## Alejandro Adrián García Martínez
 ## Descripción
-Este software busca simular la creación de reacciones químicas con un objetivo didáctico, siguiendo reglas sencillas.
-El software está diseñado en Racket y busca demostrar una solución a un problema pro medio del paradigma funcional.
-No todos los colegios tienen la oportunidad de asistir a un laboratorio a realizar pruebas para ver las reacciones químicas que existen en nuestro día a día, por lo que muchos profesores dan estos temas de forma rápida sin profundizar y sin dar la oportunidad a los alumnos de experimentar por si mismos. Este simulador busca permitir a los alumnos experimentar con diferentes elementos y ver qué reacciones químicas se pueden crear y cuáles no.
+La posibilidad de realizar experimentos con diferentes elementos y ver sus reacciones químicas es un poco complicada ya que varias reacciones pueden ser peligrosas o no se cuenta con el material o los elementos para llevar acabo, es por eso que con el objetivo dicáctico de ayudar a los alumnos a conocer un poco más sobre la química se diseño un simulador de reacciones químicas siguiendo el paradigma funcional en DrRacket.
 
-## Diseño
-El programa se dieño para Racket.
-Primeramente se utiliza la función ``` struct ``` que nos permite generar un "molde" o constructor de nuestro elementos para el simulador, de esta forma podemos acceder a sus propiedades como nombre, símbolo o tipo con mayor facilidad.
+![image](https://github.com/user-attachments/assets/1cffa6f2-2840-4a09-9b40-34dad1589c43)
+
+## Teoría y Diseño
+Para este simulador se tomó como base el conceto de las reacciones químicas entre elementos. 
+Las reacciones químicas son procesos termodinámicos de transformaciones de la materia. Para que suceda una se necesita de que intervengan dos o más sustancias (metales o no metales), que cambian significativamente en el proceso, y pueden consumir o liberar energía para generar dos o más sustancias llamadas productos. (Concepto, s.f.)
+
+Con esta definicón en mente se pensó simplificarlo de la mejor manera, con el objetivo que sea sencillo de entender, por lo que en este simulador solo se pueden hacer reacciones entre elemenos Metales (M) y No Metales (NM).
+
+La lista de elementos es la siguiente:
+## 🧪 Elementos del Simulador
+
+Estos son los elementos químicos disponibles en el simulador:
+- **Fe** – Hierro (Metal)
+- **C** – Carbono (No Metal)
+- **Cu** – Cobre (Metal)
+- **Na** – Sodio (Metal)
+- **Cl** – Cloro (No Metal)
+- **O** – Oxígeno (No Metal)
+
+Estos son algunos de los elementos más sencillos y comunes, por ejemplo el cloro (Cl) y el sodio (Na) son utilizados para crear el cloruro de sodio (NaCl) que es la sal de mesa.
+
+Con esta teoría y este diseño buscando la simpleza y buscando demostrar las capacidades del paradigma Funcional se diseño el algoritmo.
+
+## Algoritmo
+
+El programa esta hecho en el lenguaje Racket, el cuál es muy útil para trabajar el paradigma funcional
+
+Primeramente se utiliza la función ``` struct ``` que nos permite generar un "molde" o constructor de nuestro elementos para el simulador, de esta forma podemos acceder a sus propiedades como nombre, símbolo o tipo con mayor facilidad. (Racket, s.f.)
 
 ```
-(struct elemento (simbolo nnombre tipo))
+(struct elemento (simbolo nnombre tipo) #:transparent)
 ```
 
-Generamos una lista donde almacenaremos todos nuestro elementos generados
+Después de tener el molde se crea una lista llamada ```elementos``` que almacenará todos los elementos construidos en el sistema, guardando su símbolo, su nombre y si es un M o un NM.
 ```
 (define elementos (list
                    (elemento "Fe" "Hierro" "Metal")
@@ -24,9 +47,10 @@ Generamos una lista donde almacenaremos todos nuestro elementos generados
                    (elemento "Cl" "Cloro" "No Metal")
                    (elemento "O" "Oxígeno" "No Metal")))
 ```
+La función buscar nos permite encontrar un elemento deseado en base al símbolo y así acceder a toda su información. Se da uso a la función lambda dentro de la función ```findf``` para identificar primero si lo ingresado es un string, después utilizando ```findf``` buscamos una forma de "find-first" ya que no existe ningun elemento repetido y todos los símbolos son únicos se puede garantizar que siempre encuentre el correcto.
 
-La función ```buscar``` nos permite encontrar un elemento deseado en base a su símbolo, de esta forma tabién podemos saber su tipo, aquí mismo hacemos uso de la función lambda que hace la búsqueda asegurandose que sea un string con ```string=?``` y de ```findf```.
-findf nos permite hacer uso de un "find-first" con el cúal podemos tomar la primera instancia que s eparezca a lo que estamos buscando y como los símbolos no se repiten es de bastante utilidad, el único porblema es que hace que la complejidad del programa sea de O(n) ya que le toma 'n' cantidad de veces pasar por la lista hasta encontrar el elemento correcto.
+La complejidad de esta función es de ```O(n)``` en su peor y caso promedio y ```O(1)``` en su mejor caos, esto se debe a que en este caso "n" es la cantidad de elementos revisará hasta encontrar el primero que se parezca a lo deaseado.
+
 ```
 (define (buscar simbolo)
   (findf (lambda (elem) 
@@ -34,7 +58,11 @@ findf nos permite hacer uso de un "find-first" con el cúal podemos tomar la pri
          elementos))
 ```
 
-La función ```reaccion?``` permite comprobar la regla más importante del sistema que es que las reacciones químicas ocurren entre metales y no metales, al contrario de por ejemplo las aleaciones que son entre metales y metales. 
+
+La función ```reacción?``` nos permite revisar que se cumpla la regla establecida desde el diseño, que es que solo haya reacciones ntre M y NM, es decir reacciones como las aleaciones que son entre los metales y los no metales no se pueden realizar en el simulador.
+
+La complejidad de esta función es de ```O(1)``` ya que unicamente se revisa que se cumpla la condición if y regresar un true o en el caso de que no se cumpla un false.
+
 ```
 (define (reaccion? elem1 elem2)
       (if (or (and (string=? (elemento-tipo elem1) "No Metal") 
@@ -44,8 +72,10 @@ La función ```reaccion?``` permite comprobar la regla más importante del siste
           #f
           #t))
 ```
+La función ```mezcla``` funiciona como la función central del programa, porque es la función que llama a las demás y devuelve el resultado de la interacción con el usuario, es decir en esta función se busca los elementos deseados de la lista previamente construida, se indetifica si los elementos elegidos son M o NM, y se decide si se puede llevar acabo una reacción química entre ellos, en el caso de que si se imprime el resultado de la combinación y en el caso de que no solo se le notifica al usuario que no se ha podido llevar acabo.
 
-La función ```mezlca``` nos ayuda a llamar las funciones anteriores en orden y llevar acabo el funcionamiento del sistema, también es el que regresa a consola el resultado de nuestro experimento químico por medio de un condicional, que identifica si el elemento elegido existe o fue encontrado, si la reacción puede ocurrir y si no. En caso de que la reacción pueda ocurrir nos mostrara la combinación de la reacción con los símbolos correspondientes.
+Al ser la función principal del sistema se toma complejidad más alta de las demás funciones la cuál es ```O(n)``` en el peor y en el caso promedio y ```O(1)``` en el mejor de los casos.
+
 ```
 (define (mezcla sim1 sim2)
   (let ([elem1 (buscar sim1)]
@@ -60,11 +90,22 @@ La función ```mezlca``` nos ayuda a llamar las funciones anteriores en orden y 
      (string-append sim1 " + " sim2 " No se encontró reacción")])))
 ```
 
-La función ```experimentar``` nos permite imprimir los resultados de ```mezcla``` en consola
+La función ```experimentar``` es una función auxiliar para impirmir los resultados de la función ```mezcla``` en la consola.
+Ya que se toma la mayor complejidad del sistema esta función es ```O(n)``` en el peor y en el caso promedio y ```O(1)``` en el mejor de los casos.
+
 ```
 (define (experimentar elem1 elem2)
   (displayln (mezcla elem1 elem2)))
 ```
+
+# Complejidad 
+Tras analizar en sistema por completo se puede determinar que en el peor caso será ```O(n)``` suponiendo que recorrió la lista completa "n" cantidad de veces.
+
+Igualmente en el caso promedio será ```O(n)``` suponiendo que recorrió la lista "n" cantidad de veces.
+
+Finalmente en el mejor de los casos será ```O(1)```  suponiendo que el elemento buscado sea el primero de la lista por lo que no habrá necesidad de recorrer la lista.
+
+# Casos prueba
 
 ## Conclusión
 La complejidad del sistema es de O(n) principalmente por la necesidad de revisar la lista de elementos en busca del elegido, así mismo también la lógica del programa permite que también se pueda desarrollar un algoritmo un poco más robusto por medio del paradigma lógico, pero la ventaja de hacerlo en el paradigma funcional es que podemos hacer mayores mezclas sin necesidad de añadir una por una, podemos añadir nuevos elemenots al sistema en la lista.
